@@ -1,4 +1,4 @@
-def preprocess_strong_suffix(shift, border_position, pattern):
+def strong_suffix(shift, border_position, pattern):
     m = len(pattern)
     i = m
     j = m + 1
@@ -18,7 +18,7 @@ def preprocess_strong_suffix(shift, border_position, pattern):
     return
 
 
-def preprocess_partial_suffix(shift, border_position, pattern_length):
+def partial_suffix(shift, border_position, pattern_length):
     j = border_position[0]
 
     for i in range(pattern_length + 1):
@@ -39,8 +39,8 @@ def search(text, pattern):
     border_position = [0] * (m + 1)
     shift = [0] * (m + 1)
 
-    preprocess_strong_suffix(shift, border_position, pattern)
-    preprocess_partial_suffix(shift, border_position, m)
+    strong_suffix(shift, border_position, pattern)
+    partial_suffix(shift, border_position, m)
 
     while s <= n - m:
         j = m - 1
