@@ -1,7 +1,7 @@
-import pdfplumber
-import sys
+from pdfminer.high_level import extract_text
 import glob
 from Algorithm.boyer_moore import search
+import time
 
 
 def sort_compare(rank):
@@ -17,17 +17,17 @@ def main():
         files = glob.glob("pdfs/*.pdf")
 
         for file_name in files:
-            pdfs.append([file_name, pdfplumber.open(file_name)])
+            pdfs.append([file_name, extract_text(file_name).upper()])
 
         while True:
             val = str(input("Search: "))
+            words = val.split(" ")
+
+            t0 = time.time()
 
             for file in pdfs:
-                for page in file[1].pages:
-                    words = val.split(" ")
-
-                    for word in words:
-                        count += search(page.extract_text().upper(), word.upper())
+                for word in words:
+                    count += search(file[1], word.upper())
 
                 ranks.append([file[0], count])
                 count = 0
@@ -35,6 +35,10 @@ def main():
                 ranks.sort(key=sort_compare, reverse=True)
 
             i = 1
+
+            t1 = time.time()
+
+            print(f"Rank completed in {t1-t0} seconds")
             for rank in ranks:
                 print(f"     Rank {i}  File: {rank[0]}  Score: {rank[1]}")
                 i += 1
